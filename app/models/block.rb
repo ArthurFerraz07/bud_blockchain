@@ -4,10 +4,18 @@ require 'date'
 require 'digest'
 
 require_relative './base_model'
+require_relative './../errors/application_error'
 
 # This class represents a block of a blockchain
 class Block < BaseModel
   attr_accessor :hash, :previous_hash, :timestamp, :data, :proof_of_work, :genesis_block
+
+  class << self
+    def proof_of_work_hash(proof_of_work, previous_proof_of_work)
+      proof_of_work_ = proof_of_work**2 - previous_proof_of_work**2
+      Digest::SHA256.hexdigest(proof_of_work_.to_s)
+    end
+  end
 
   def initialize(attributes)
     super
@@ -17,19 +25,13 @@ class Block < BaseModel
     @data ||= {}
   end
 
-  def proof_of_work_hash(last_block)
-    proof_of_work_ = proof_of_work**2 - last_block.proof_of_work**2
-    Digest::SHA256.hexdigest(proof_of_work_.to_s)
-  end
-
   def to_h
     {
       hash:,
       previous_hash:,
       timestamp:,
       data:,
-      proof_of_work:,
-      genesis_block:
+      proof_of_work:
     }
   end
 
@@ -44,8 +46,8 @@ class Block < BaseModel
   end
 
   def validate_previous_hash
-    raise BaseModelError, 'Missing previous hash' if previous_hash.nil? && !genesis_block
-    raise BaseModelError, 'Genesis block must not have a previous hash' if !previous_hash.nil? && genesis_block
+    raise ApplicationError, 'Missing previous hash' if previous_hash.nil? && !genesis_block
+    raise ApplicationError, 'Genesis block must not have a previous hash' if !previous_hash.nil? && genesis_block
 
     true
   end

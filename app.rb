@@ -21,3 +21,15 @@ get '/api/v1/blockchain' do
 
   Blockchain::ShowService.call.to_json
 end
+
+get '/api/v1/blockchain/validate_chain' do
+  content_type :json
+
+  Blockchain::ValidateChainService.call.to_json
+end
+
+post '/api/v1/blockchain/mine_block' do
+  content_type :json
+
+  Blockchain::MineBlockService.call(params[:data]).to_json
+end

@@ -4,8 +4,7 @@ class Blockchain
   # Show the blockchain
   class ShowService < ApplicationService
     def call
-      blockchain = Blockchain.instance
-      { chain: blockchain.chain.values.map(&:to_h) }
+      default_response(true, blockchain.chain.values.map(&:to_h))
     end
   end
 end
