@@ -8,6 +8,8 @@ ruby '3.1.2'
 gem 'awesome_print'
 # Environment variables
 gem 'dotenv'
+# Database
+gem 'mongoid'
 # Debugging
 gem 'pry'
 # HTTP requests
