@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec'
-require_relative '../../app'
-require_relative './../../app/models/blockchain'
+require_relative './../spec_helper'
 
 RSpec.describe Block do
 end
