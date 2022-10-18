@@ -8,14 +8,15 @@ ruby '3.1.2'
 gem 'awesome_print'
 # Environment variables
 gem 'dotenv'
+# Database
+gem 'mongoid'
+# Debugging
+gem 'pry'
 # HTTP requests
 gem 'puma'
+# Re run app
+gem 'rerun'
+# Linting
+gem 'rubocop'
 # Domain-specific language
 gem 'sinatra'
-
-group :development, :test do
-  # Debugging
-  gem 'pry'
-  # Linting
-  gem 'rubocop'
-end
