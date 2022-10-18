@@ -16,6 +16,8 @@ gem 'pry'
 gem 'puma'
 # Re run app
 gem 'rerun'
+# Unit tests
+gem 'rspec', '~> 3.0'
 # Linting
 gem 'rubocop'
 # Domain-specific language
