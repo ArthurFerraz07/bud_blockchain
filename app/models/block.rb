@@ -19,6 +19,10 @@ class Block
       proof_of_work_ = proof_of_work**2 - previous_proof_of_work**2
       Digest::SHA256.hexdigest(proof_of_work_.to_s)
     end
+
+    def store_in_collection(node = 3000)
+      store_in(collection: "node_#{node}_blocks")
+    end
   end
 
   def initialize(attributes)

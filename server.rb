@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+require 'sinatra'
 require_relative './app'
 
 $NODE = (ARGV[0] || 3000).freeze
 
-Block.store_in collection: "node_#{$NODE}_blocks"
+Block.store_in_collection($NODE)
 
 print "⚡Web Server Running ⚡\n"
 

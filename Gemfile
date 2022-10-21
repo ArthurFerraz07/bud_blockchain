@@ -22,3 +22,11 @@ gem 'rspec', '~> 3.0'
 gem 'rubocop'
 # Domain-specific language
 gem 'sinatra'
+
+# Testing
+group :test do
+  # fixtures replacement
+  gem 'factory_bot'
+  # Fake data
+  gem 'faker'
+end

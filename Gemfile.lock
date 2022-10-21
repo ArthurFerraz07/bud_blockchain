@@ -15,6 +15,10 @@ GEM
     concurrent-ruby (1.1.10)
     diff-lcs (1.5.0)
     dotenv (2.8.0)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    faker (2.23.0)
+      i18n (>= 1.8.11, < 2)
     ffi (1.15.5)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
@@ -95,6 +99,8 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   dotenv
+  factory_bot
+  faker
   mongoid
   pry
   puma
