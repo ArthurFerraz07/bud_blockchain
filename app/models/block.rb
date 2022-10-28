@@ -11,7 +11,7 @@ class Block
   field :timestamp, type: Integer
   field :data, type: Hash
   field :proof_of_work, type: Integer
-  field :genesis_block, type: Boolean, default: false
+  field :genesis, type: Boolean, default: false
   field :mining_time, type: Integer
 
   class << self
@@ -23,9 +23,13 @@ class Block
     def store_in_collection(node = 3000)
       store_in(collection: "node_#{node}_blocks")
     end
+
+    def last_block
+      order(timestamp: :asc).last
+    end
   end
 
-  def initialize(attributes)
+  def initialize(attributes = {})
     super
     validate_previous_hash
     set_timestamp
@@ -34,7 +38,7 @@ class Block
   end
 
   def previous_block
-    Block.find(previous_hash64:)
+    Block.where(hash64: previous_hash64).first
   end
 
   def to_h
@@ -51,7 +55,28 @@ class Block
   private
 
   def calculate_hash
-    self.hash64 = genesis_block ? '0' * 64 : Digest::SHA256.hexdigest("#{previous_hash64}#{timestamp}#{data}#{proof_of_work}")
+    self.hash64 = if genesis
+                    '0' * 64
+                  else
+                    Digest::SHA256.hexdigest("#{previous_hash64}#{timestamp}#{data}#{proof_of_work}")
+                  end
+  end
+
+  def genesis_validations
+    return unless genesis
+
+    raise ApplicationError, 'Genesis block must not have a previous hash64' unless previous_hash64.nil?
+
+    true
+  end
+
+  def non_genesis_validations
+    return if genesis
+
+    raise ApplicationError, 'Missing previous hash64' if previous_hash64.nil?
+    raise ApplicationError, 'Invalid previous hash64' if previous_block.nil?
+
+    true
   end
 
   def set_timestamp
@@ -59,8 +84,8 @@ class Block
   end
 
   def validate_previous_hash
-    raise ApplicationError, 'Missing previous hash64' if previous_hash64.nil? && !genesis_block
-    raise ApplicationError, 'Genesis block must not have a previous hash64' if !previous_hash64.nil? && genesis_block
+    genesis_validations
+    non_genesis_validations
 
     true
   end

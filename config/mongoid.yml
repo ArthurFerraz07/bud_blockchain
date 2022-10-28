@@ -6,3 +6,21 @@ development:
         - localhost:27017
       options:
         server_selection_timeout: 1
+
+test:
+  clients:
+    default:
+      database: bud_blockchain_test
+      hosts:
+        - localhost:27017
+      options:
+        server_selection_timeout: 1
+
+production:
+  clients:
+    default:
+      database: bud_blockchain_production
+      hosts:
+        - localhost:27017
+      options:
+        server_selection_timeout: 1
