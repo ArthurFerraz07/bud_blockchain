@@ -3,9 +3,18 @@
 class Blockchain
   # Mine a new block on blockchain
   class MineBlockService < ApplicationService
+    attr_accessor :blockchain
+
     def call(data)
+      load_chain
       blockchain.mine_block(data)
-      default_response(true, blockchain.last_block.to_h)
+      default_response(true, block: blockchain.last_block)
+    end
+
+    private
+
+    def load_chain
+      self.blockchain = Blockchain.instance
     end
   end
 end

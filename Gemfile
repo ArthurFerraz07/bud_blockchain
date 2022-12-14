@@ -16,7 +16,19 @@ gem 'pry'
 gem 'puma'
 # Re run app
 gem 'rerun'
+# Unit tests
+gem 'rspec', '~> 3.0'
 # Linting
 gem 'rubocop'
 # Domain-specific language
 gem 'sinatra'
+
+# Testing
+group :test do
+  # fixtures replacement
+  gem 'factory_bot'
+  # Fake data
+  gem 'faker'
+  # A gem providing "time travel" and "time freezing" capabilities, making it dead simple to test time-dependent code
+  gem 'timecop'
+end

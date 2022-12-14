@@ -10,7 +10,7 @@ class Blockchain < MemoModel
   PROOF_OF_WORK_RANGE = 1_000_000_000..9_999_999_999
   PROOF_OF_WORK_HASH_START_WITH = '0' * DIFFICULT
 
-  attr_accessor :genesis_block, :last_block
+  attr_accessor :genesis, :last_block
 
   # Singleton pattern
   @instance = nil
@@ -42,10 +42,13 @@ class Blockchain < MemoModel
   end
 
   def validate_chain
+    genesis_blocks_count = Block.where(genesis_block: true).count
+    raise ApplicationError, "[CRITICAL] Should have only one genesis block, but have #{genesis_blocks_count}" unless genesis_blocks_count == 1
+
     it_count = 0
     block = last_block
     loop do
-      break if block.genesis_block
+      break if block.genesis
 
       previous_block = Block.where(hash64: block.previous_hash64).first
 
@@ -57,6 +60,8 @@ class Blockchain < MemoModel
       it_count += 1
     end
     raise ApplicationError, 'Invalid chain' unless it_count == Block.count - 1
+
+    true
   end
 
   private
@@ -73,11 +78,11 @@ class Blockchain < MemoModel
   end
 
   def handle_genesis_block
-    self.genesis_block = Block.where(genesis_block: true).first
-    return unless genesis_block.nil?
+    self.genesis = Block.where(genesis: true).first
+    return unless genesis.nil?
 
-    self.genesis_block = Block.new(previous_hash64: nil, genesis_block: true, proof_of_work: rand(PROOF_OF_WORK_RANGE))
-    chain_block(genesis_block)
+    self.genesis = Block.new(previous_hash64: nil, genesis: true, proof_of_work: rand(PROOF_OF_WORK_RANGE))
+    chain_block(genesis)
   end
 
   def handle_last_block

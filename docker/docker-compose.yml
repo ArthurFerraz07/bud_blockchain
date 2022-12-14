@@ -1,0 +1,16 @@
+# Docker version 20.10.21, build baeda1f
+# docker-compose version 1.27.4, build 40524192
+
+version: "3.8"
+services:
+  mongodb:
+    image : mongo
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /home/arthur/Programming/bud_blockchain_development:/data/db
+    ports:
+      - 27017:27017
+    restart: unless-stopped
