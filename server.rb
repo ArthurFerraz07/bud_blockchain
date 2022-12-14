@@ -3,16 +3,14 @@
 require 'sinatra'
 require_relative './app'
 
-NODE = (ARGV[0] || 3000).freeze
-ENVIRONMENT = (ARGV[1] || 'development').freeze
+node = (ARGV[0] || 3000).freeze
+environment = (ARGV[1] || 'development').freeze
 
-Mongoid.load!(File.join(File.dirname(__FILE__), 'config', 'mongoid.yml'), ENVIRONMENT.to_sym)
-
-Block.store_in_collection(NODE)
+Application.instance.run(environment, node)
 
 print "⚡Web Server Running ⚡\n"
 
-set :port, NODE
+set :port, node
 
 get '/' do
   Api::V1::ApplicationController.new(request).index

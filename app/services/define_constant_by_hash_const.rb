@@ -15,9 +15,9 @@ class DefineConstantByHashConst < ApplicationService
 
       @klass.const_set(key, value)
     end
-    default_response(true)
+    success_response
   rescue StandardError => e
-    default_response(false, error: e.message)
+    error_response(e)
   end
 
   private

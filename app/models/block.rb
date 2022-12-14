@@ -20,7 +20,7 @@ class Block
       Digest::SHA256.hexdigest(proof_of_work_.to_s)
     end
 
-    def store_in_collection(node = 3000)
+    def store_in_node(node = 3000)
       store_in(collection: "node_#{node}_blocks")
     end
 

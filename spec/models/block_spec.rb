@@ -16,11 +16,11 @@ RSpec.describe Block do
 
   let(:freeze_timestamp) { freeze_time.to_i }
 
-  describe '#store_in_collection' do
+  describe '#store_in_node' do
     context 'when node is 3000' do
       let(:node) { 3000 }
       it 'expects to store blocks in "node_3001_blocks" collection' do
-        Block.store_in_collection(3001)
+        Block.store_in_node(3001)
         expect(Block.collection.name).to eq('node_3001_blocks')
       end
     end

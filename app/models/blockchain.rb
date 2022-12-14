@@ -42,8 +42,10 @@ class Blockchain < MemoModel
   end
 
   def validate_chain
-    genesis_blocks_count = Block.where(genesis_block: true).count
-    raise ApplicationError, "[CRITICAL] Should have only one genesis block, but have #{genesis_blocks_count}" unless genesis_blocks_count == 1
+    genesis_blocks_count = Block.where(genesis: true).count
+    unless genesis_blocks_count == 1
+      raise ApplicationError, "[CRITICAL] Should have only one genesis block, but have #{genesis_blocks_count}"
+    end
 
     it_count = 0
     block = last_block

@@ -5,28 +5,24 @@ class ApplicationService
   attr_accessor :success
 
   def initialize
-    @success = true
-  end
-
-  class << self
-    def call(*args)
-      new.call(*args)
-    rescue ApplicationError => e
-      default_response(false, error: e.message)
-    end
-
-    def default_response(success, data = {})
-      data[:success] = !!success
-      data[:error] ||= nil
-      struct = Struct.new(*data.keys)
-      struct.new(*data.values)
-    end
+    self.success = false
   end
 
   private
 
   def default_response(success, data = {})
-    @success = success
-    self.class.default_response(success, data)
+    self.success = success
+    data[:success] = !!success
+    data[:error] ||= nil
+    struct = Struct.new(*data.keys)
+    struct.new(*data.values)
+  end
+
+  def success_response(data = {})
+    default_response(true, data)
+  end
+
+  def error_response(error)
+    default_response(false, error: error.message)
   end
 end

@@ -11,13 +11,15 @@ module Api
       end
 
       def validate_chain
-        render(data: { valid: Blockchain::ValidateChainService.call.success })
+        service_response = Blockchain::ValidateChainService.new.call
+
+        render(data: { valid: service_response.success, error: service_response.error })
       end
 
       def mine_block
         parse_request_body
 
-        service_response = Blockchain::MineBlockService.call(params['data'])
+        service_response = Blockchain::MineBlockService.new.call(params['data'])
 
         render(data: { block: service_response.block.to_h })
       end

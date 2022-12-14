@@ -10,4 +10,4 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 end
 
-Mongoid.load!(File.join(File.dirname(__FILE__), '../', 'config', 'mongoid.yml'), :test)
+Application.instance.run(:test)

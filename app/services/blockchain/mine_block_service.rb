@@ -8,7 +8,7 @@ class Blockchain
     def call(data)
       load_chain
       blockchain.mine_block(data)
-      default_response(true, block: blockchain.last_block)
+      success_response(block: blockchain.last_block)
     end
 
     private

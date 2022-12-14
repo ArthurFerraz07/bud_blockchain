@@ -7,7 +7,12 @@ class Blockchain
 
     def call
       load_chain
-      default_response(blockchain.validate_chain)
+
+      blockchain.validate_chain
+
+      success_response
+    rescue StandardError => e
+      error_response(e)
     end
 
     private
