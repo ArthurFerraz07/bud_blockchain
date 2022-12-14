@@ -12,26 +12,23 @@ print "⚡Web Server Running ⚡\n"
 set :port, $NODE
 
 get '/' do
-  'Put this in your **** & ***** it!'
+  Api::V1::ApplicationController.new(request).index
 end
 
 get '/api/v1/blockchain' do
   content_type :json
 
-  Blockchain::ShowService.call.to_json
+  Api::V1::BlockchainController.new(request).index
 end
 
 get '/api/v1/blockchain/validate_chain' do
   content_type :json
 
-  Blockchain::ValidateChainService.call.to_json
+  Api::V1::BlockchainController.new(request).validate_chain
 end
 
 post '/api/v1/blockchain/mine_block' do
   content_type :json
 
-  body = request.body.read
-  params = JSON.parse(body.gsub("\r", ""))
-
-  Blockchain::MineBlockService.call(params["data"]).to_json
+  Api::V1::BlockchainController.new(request).mine_block
 end

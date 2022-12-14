@@ -2,11 +2,10 @@
 
 # Base class for services
 class ApplicationService
-  attr_accessor :success, :blockchain
+  attr_accessor :success
 
   def initialize
     @success = true
-    @blockchain = Blockchain.instance
   end
 
   class << self
@@ -17,14 +16,17 @@ class ApplicationService
     end
 
     def default_response(success, data = {})
-      @success = success
-      { success:, data: }
+      data[:success] = !!success
+      data[:error] ||= nil
+      struct = Struct.new(*data.keys)
+      struct.new(*data.values)
     end
   end
 
   private
 
   def default_response(success, data = {})
+    @success = success
     self.class.default_response(success, data)
   end
 end

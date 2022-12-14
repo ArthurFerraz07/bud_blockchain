@@ -42,6 +42,9 @@ class Blockchain < MemoModel
   end
 
   def validate_chain
+    genesis_blocks_count = Block.where(genesis_block: true).count
+    raise ApplicationError, "[CRITICAL] Should have only one genesis block, but have #{genesis_blocks_count}" unless genesis_blocks_count == 1
+
     it_count = 0
     block = last_block
     loop do
@@ -57,6 +60,8 @@ class Blockchain < MemoModel
       it_count += 1
     end
     raise ApplicationError, 'Invalid chain' unless it_count == Block.count - 1
+
+    true
   end
 
   private
