@@ -14,6 +14,7 @@ class Block < ApplicationModel
   field :proof_of_work, type: Integer
   field :genesis, type: Boolean, default: false
   field :mining_time, type: Integer
+  field :mining_started_at, type: Integer
 
   class << self
     def store_in_node(node = 3000)
@@ -27,8 +28,7 @@ class Block < ApplicationModel
 
   def initialize(attributes = {})
     super
-    set_timestamp
-    calculate_hash
+    self.timestamp ||= Time.now.to_i
     self.data ||= {}
   end
 
@@ -47,16 +47,6 @@ class Block < ApplicationModel
     }
   end
 
-  private
-
-  def calculate_hash
-    self.hash64 = if genesis
-                    '0' * 64
-                  else
-                    Digest::SHA256.hexdigest("#{previous_hash64}#{timestamp}#{data}#{proof_of_work}")
-                  end
-  end
-
   def genesis_previous_hash_validations
     return unless genesis
 
@@ -72,10 +62,6 @@ class Block < ApplicationModel
     raise ModelValidationError, 'Previous block not found' if previous_block.nil?
 
     true
-  end
-
-  def set_timestamp
-    self.timestamp ||= Time.now.to_i
   end
 
   def run_validations!

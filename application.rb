@@ -18,6 +18,10 @@ class Application
     end
   end
 
+  def blockchain_genesis_hash64
+    '0' * 64
+  end
+
   def blockchain_proof_of_work_floor
     1_000_000_000
   end
@@ -27,7 +31,7 @@ class Application
   end
 
   def blockchain_proof_of_work_range
-    blockchain_proof_of_work_floor..blockchain_proof_of_work_floor
+    blockchain_proof_of_work_floor..blockchain_proof_of_work_ceil
   end
 
   def blockchain_difficult

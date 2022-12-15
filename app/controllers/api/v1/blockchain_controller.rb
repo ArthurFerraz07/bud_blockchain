@@ -19,7 +19,7 @@ module Api
       def mine_block
         parse_request_body
 
-        service_response = Blockchain::MineBlockService.new.call(params['data'])
+        service_response = Blockchain::MineBlockService.new(params['data']).call
 
         render(data: { block: service_response.block.to_h })
       end
