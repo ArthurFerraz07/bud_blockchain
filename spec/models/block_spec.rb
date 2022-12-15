@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative './../spec_helper'
-require_relative './../helpers/block_helper'
+require './spec/spec_helper'
+require './spec/helpers/block_helper'
 
 RSpec.describe Block do
   include BlockHelper
@@ -175,21 +175,6 @@ RSpec.describe Block do
 
       it 'expects to raise error' do
         expect { block.send(:non_genesis_validations) }.to raise_error(ApplicationError, 'Invalid previous hash64')
-      end
-    end
-  end
-
-  describe '#set_timestamp' do
-    context 'when block is valid' do
-      around do |example|
-        Timecop.freeze(freeze_time) do
-          example.run
-        end
-      end
-
-      it 'expects to set timestamp to freeze time' do
-        block = create(:block)
-        expect(block.timestamp).to eq(freeze_timestamp)
       end
     end
   end

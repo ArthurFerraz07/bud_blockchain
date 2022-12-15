@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require_relative './../errors/application_error'
+require './app/errors/model_validation_error'
+require './app/models/application_model'
 
 # This class represents a block of a blockchain
-class Block
+class Block < ApplicationModel
   include Mongoid::Document
 
   field :hash64, type: String
@@ -65,7 +66,7 @@ class Block
   def genesis_validations
     return unless genesis
 
-    raise ApplicationError, 'Genesis block must not have a previous hash64' unless previous_hash64.nil?
+    raise ModelValidationError, 'Genesis block must not have a previous hash64' unless previous_hash64.nil?
 
     true
   end
@@ -73,14 +74,18 @@ class Block
   def non_genesis_validations
     return if genesis
 
-    raise ApplicationError, 'Missing previous hash64' if previous_hash64.nil?
-    raise ApplicationError, 'Invalid previous hash64' if previous_block.nil?
+    raise ModelValidationError, 'Missing previous hash64' if previous_hash64.nil?
+    raise ModelValidationError, 'Invalid previous hash64' if previous_block.nil?
 
     true
   end
 
   def set_timestamp
     self.timestamp = Time.now.to_i
+  end
+
+  def validate
+    validate_previous_hash
   end
 
   def validate_previous_hash

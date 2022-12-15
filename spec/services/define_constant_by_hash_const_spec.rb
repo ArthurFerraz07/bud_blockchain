@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './../spec_helper'
+require './spec/spec_helper'
 
 class Klass
   CONST = { A: 1, B: 2 }.freeze

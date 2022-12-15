@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './app'
+require './app'
 
 Application.instance.run('development')
 
