@@ -72,7 +72,7 @@ class Blockchain < MemoModel
   private
 
   def block_tuple_valid?(block, previous_block)
-    proof_of_work_hash = Block::ProofOfWorkHashService.new(block.proof_of_work, previous_block.proof_of_work).call!
+    proof_of_work_hash = Block::GenerateProofOfWorkHashService.new(block.proof_of_work, previous_block.proof_of_work).call!
     proof_of_work_hash.start_with?(PROOF_OF_WORK_HASH_STARTS_WITH) && block.previous_hash64 == previous_block.hash64
   end
 

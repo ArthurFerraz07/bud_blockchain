@@ -4,7 +4,7 @@ require './app/errors/service_error'
 
 class Block
   # Generate hash based om proof of work and previous proof of work
-  class ProofOfWorkHashService < ApplicationService
+  class GenerateProofOfWorkHashService < ApplicationService
     attr_accessor :blockchain_proof_of_work_range, :proof_of_work, :previous_proof_of_work
 
     def initialize(proof_of_work, previous_proof_of_work)

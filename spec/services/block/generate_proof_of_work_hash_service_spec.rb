@@ -7,7 +7,7 @@ def generate_hash(proof_of_work, previous_proof_of_work)
   Digest::SHA256.hexdigest(proof_of_work_.to_s)
 end
 
-RSpec.describe Block::ProofOfWorkHashService do
+RSpec.describe Block::GenerateProofOfWorkHashService do
   let(:service) { described_class.new(proof_of_work, previous_proof_of_work) }
 
   describe '#call' do

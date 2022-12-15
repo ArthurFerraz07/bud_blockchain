@@ -27,7 +27,6 @@ class Block < ApplicationModel
 
   def initialize(attributes = {})
     super
-    validate_previous_hash
     set_timestamp
     calculate_hash
     self.data ||= {}
@@ -76,7 +75,7 @@ class Block < ApplicationModel
   end
 
   def set_timestamp
-    self.timestamp = Time.now.to_i
+    self.timestamp ||= Time.now.to_i
   end
 
   def run_validations!
