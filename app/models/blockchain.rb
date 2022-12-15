@@ -27,7 +27,7 @@ class Blockchain < MemoModel
 
   def initialize
     super
-    handle_genesis_block
+    # handle_genesis_block
   end
 
   def last_block
@@ -62,12 +62,4 @@ class Blockchain < MemoModel
   end
 
   private
-
-  def handle_genesis_block
-    self.genesis_block ||= Block.where(genesis: true).first
-    return if genesis_block
-
-    self.genesis_block = Block.new(previous_hash64: nil, genesis: true)
-    ChainBlockService.new(block).call!
-  end
 end

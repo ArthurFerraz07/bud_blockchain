@@ -57,6 +57,8 @@ class Application
     set_store_node
 
     load_constants
+
+    handle_blockchain_instance
   end
 
   private
@@ -75,5 +77,10 @@ class Application
 
   def set_store_node
     Block.store_in_node(node)
+  end
+
+  def handle_blockchain_instance
+    Blockchain.instance
+    Blockchain::HandleGenesisBlockService.new.call!
   end
 end
