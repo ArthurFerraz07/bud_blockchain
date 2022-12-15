@@ -86,8 +86,9 @@ class Block < ApplicationModel
 
   def validate_hash64
     raise ModelValidationError, 'Missing hash64' if hash64.nil?
-    raise ModelValidationError, 'Invalid hash64' unless hash64.match?()
+    raise ModelValidationError, 'Invalid hash64' unless hash64.match?(Application.instance.hash64_pattern)
 
+    true
   end
 
   def validate_previous_hash
