@@ -16,11 +16,6 @@ class Block < ApplicationModel
   field :mining_time, type: Integer
 
   class << self
-    def proof_of_work_hash(proof_of_work, previous_proof_of_work)
-      proof_of_work_ = proof_of_work**2 - previous_proof_of_work**2
-      Digest::SHA256.hexdigest(proof_of_work_.to_s)
-    end
-
     def store_in_node(node = 3000)
       store_in(collection: "node_#{node}_blocks")
     end
@@ -39,7 +34,7 @@ class Block < ApplicationModel
   end
 
   def previous_block
-    Block.where(hash64: previous_hash64).first
+    @previous_block ||= Block.where(hash64: previous_hash64).first
   end
 
   def to_h
@@ -63,19 +58,19 @@ class Block < ApplicationModel
                   end
   end
 
-  def genesis_validations
+  def genesis_previous_hash_validations
     return unless genesis
 
-    raise ModelValidationError, 'Genesis block must not have a previous hash64' unless previous_hash64.nil?
+    raise ModelValidationError, 'Genesis block must not have a previous hash64' if previous_hash64
 
     true
   end
 
-  def non_genesis_validations
+  def non_genesis_previous_hash_validations
     return if genesis
 
     raise ModelValidationError, 'Missing previous hash64' if previous_hash64.nil?
-    raise ModelValidationError, 'Invalid previous hash64' if previous_block.nil?
+    raise ModelValidationError, 'Previous block not found' if previous_block.nil?
 
     true
   end
@@ -84,13 +79,20 @@ class Block < ApplicationModel
     self.timestamp = Time.now.to_i
   end
 
-  def validate
+  def run_validations!
+    validate_hash64
     validate_previous_hash
   end
 
+  def validate_hash64
+    raise ModelValidationError, 'Missing hash64' if hash64.nil?
+    raise ModelValidationError, 'Invalid hash64' unless hash64.match?()
+
+  end
+
   def validate_previous_hash
-    genesis_validations
-    non_genesis_validations
+    genesis_previous_hash_validations
+    non_genesis_previous_hash_validations
 
     true
   end

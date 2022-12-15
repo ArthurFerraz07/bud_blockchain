@@ -1,14 +1,17 @@
 # frozen_string_literal: true
 
+require './application'
+require './app/errors/application_error'
+
 require_relative './memo_model'
 require_relative './block'
-require_relative './../errors/application_error'
+
 
 # This class manage the blockchain logic
 class Blockchain < MemoModel
-  DIFFICULT = 4
-  PROOF_OF_WORK_RANGE = 1_000_000_000..9_999_999_999
-  PROOF_OF_WORK_HASH_START_WITH = '0' * DIFFICULT
+  DIFFICULT = Application.instance.blockchain_difficult
+  PROOF_OF_WORK_RANGE = Application.instance.blockchain_proof_of_work_range
+  PROOF_OF_WORK_HASH_STARTS_WITH = Application.instance.blockchain_proof_of_work_hash_starts_with
 
   attr_accessor :genesis, :last_block
 
@@ -69,8 +72,8 @@ class Blockchain < MemoModel
   private
 
   def block_tuple_valid?(block, previous_block)
-    proof_of_work_hash = Block::ProofOfWorkHash.new(block.proof_of_work, previous_block.proof_of_work).call
-    proof_of_work_hash.start_with?(PROOF_OF_WORK_HASH_START_WITH) && block.previous_hash64 == previous_block.hash64
+    proof_of_work_hash = Block::ProofOfWorkHashService.new(block.proof_of_work, previous_block.proof_of_work).call!
+    proof_of_work_hash.start_with?(PROOF_OF_WORK_HASH_STARTS_WITH) && block.previous_hash64 == previous_block.hash64
   end
 
   def chain_block(block, mining_started_at = nil)
