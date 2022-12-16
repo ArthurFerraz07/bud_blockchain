@@ -11,7 +11,7 @@ class Blockchain
     end
 
     def call
-      call!
+      success_response(block: call!)
     rescue StandardError => e
       error_response(e)
     end

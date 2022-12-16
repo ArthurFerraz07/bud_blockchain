@@ -3,6 +3,8 @@
 class Blockchain
   # Mine a new block on blockchain
   class ValidateBlockOnChainService < ApplicationService
+    PROOF_OF_WORK_HASH_STARTS_WITH = Application.instance.blockchain_proof_of_work_hash_starts_with
+
     attr_accessor :block
 
     def initialize(block)

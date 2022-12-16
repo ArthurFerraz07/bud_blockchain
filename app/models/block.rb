@@ -29,7 +29,7 @@ class Block < ApplicationModel
   def initialize(attributes = {})
     super
     self.timestamp ||= Time.now.to_i
-    self.data ||= {}
+    # self.data ||= {}
   end
 
   def previous_block

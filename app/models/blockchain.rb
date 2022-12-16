@@ -10,7 +10,6 @@ require_relative './block'
 # This class manage the blockchain logic
 class Blockchain < MemoModel
   PROOF_OF_WORK_RANGE = Application.instance.blockchain_proof_of_work_range
-  PROOF_OF_WORK_HASH_STARTS_WITH = Application.instance.blockchain_proof_of_work_hash_starts_with
 
   attr_accessor :genesis_block
 
