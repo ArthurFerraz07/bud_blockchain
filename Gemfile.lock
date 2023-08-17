@@ -89,7 +89,7 @@ GEM
       rack-protection (= 3.0.4)
       tilt (~> 2.0)
     tilt (2.0.11)
-    timecop (0.9.5)
+    timecop (0.9.6)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
@@ -112,7 +112,7 @@ DEPENDENCIES
   timecop
 
 RUBY VERSION
-   ruby 3.1.2p20
+   ruby 3.1.3p185
 
 BUNDLED WITH
-   2.3.7
+   2.3.26

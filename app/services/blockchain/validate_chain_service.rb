@@ -6,19 +6,13 @@ class Blockchain
     attr_accessor :blockchain
 
     def call
-      load_chain
+      load_blockchain
 
       blockchain.validate_chain
 
       success_response
     rescue StandardError => e
       error_response(e)
-    end
-
-    private
-
-    def load_chain
-      self.blockchain = Blockchain.instance
     end
   end
 end

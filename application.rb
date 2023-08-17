@@ -18,6 +18,34 @@ class Application
     end
   end
 
+  def blockchain_genesis_hash64
+    '0' * 64
+  end
+
+  def blockchain_proof_of_work_floor
+    1_000_000_000
+  end
+
+  def blockchain_proof_of_work_ceil
+    9_999_999_999
+  end
+
+  def blockchain_proof_of_work_range
+    blockchain_proof_of_work_floor..blockchain_proof_of_work_ceil
+  end
+
+  def blockchain_difficult
+    4
+  end
+
+  def blockchain_proof_of_work_hash_starts_with
+    '0' * blockchain_difficult
+  end
+
+  def hash64_pattern
+    /^[a-f0-9]{64}$/
+  end
+
   def run(environment, node = 3000)
     self.environment = environment&.to_sym
     self.node = node
@@ -29,9 +57,15 @@ class Application
     set_store_node
 
     load_constants
+
+    handle_blockchain_instance
   end
 
   private
+
+  def load_constants
+    DefineConstantByHashConst.new(Api::V1::ApplicationController, 'RESPONSE_STATUSES').call
+  end
 
   def load_database
     Mongoid.load!(File.join(File.dirname(__FILE__), 'config', 'mongoid.yml'), environment.to_sym)
@@ -45,7 +79,8 @@ class Application
     Block.store_in_node(node)
   end
 
-  def load_constants
-    DefineConstantByHashConst.new(Api::V1::ApplicationController, 'RESPONSE_STATUSES').call
+  def handle_blockchain_instance
+    Blockchain.instance
+    Blockchain::HandleGenesisBlockService.new.call!
   end
 end

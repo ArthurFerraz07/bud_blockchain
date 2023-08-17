@@ -8,6 +8,12 @@ class ApplicationService
     self.success = false
   end
 
+  protected
+
+  def load_blockchain
+    self.blockchain = Blockchain.instance
+  end
+
   private
 
   def default_response(success, data = {})
@@ -18,11 +24,11 @@ class ApplicationService
     struct.new(*data.values)
   end
 
-  def success_response(data = {})
-    default_response(true, data)
-  end
-
   def error_response(error)
     default_response(false, error: error.message)
+  end
+
+  def success_response(data = {})
+    default_response(true, data)
   end
 end

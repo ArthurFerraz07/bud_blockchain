@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require_relative './app'
+require './app'
 
 node = (ARGV[0] || 3000).freeze
 environment = (ARGV[1] || 'development').freeze

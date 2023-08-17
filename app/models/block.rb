@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require_relative './../errors/application_error'
+require './app/errors/model_validation_error'
+require './app/models/application_model'
 
 # This class represents a block of a blockchain
-class Block
+class Block < ApplicationModel
   include Mongoid::Document
 
   field :hash64, type: String
@@ -13,13 +14,9 @@ class Block
   field :proof_of_work, type: Integer
   field :genesis, type: Boolean, default: false
   field :mining_time, type: Integer
+  field :mining_started_at, type: Integer
 
   class << self
-    def proof_of_work_hash(proof_of_work, previous_proof_of_work)
-      proof_of_work_ = proof_of_work**2 - previous_proof_of_work**2
-      Digest::SHA256.hexdigest(proof_of_work_.to_s)
-    end
-
     def store_in_node(node = 3000)
       store_in(collection: "node_#{node}_blocks")
     end
@@ -31,14 +28,12 @@ class Block
 
   def initialize(attributes = {})
     super
-    validate_previous_hash
-    set_timestamp
-    calculate_hash
-    self.data ||= {}
+    self.timestamp ||= Time.now.to_i
+    # self.data ||= {}
   end
 
   def previous_block
-    Block.where(hash64: previous_hash64).first
+    @previous_block ||= Block.where(hash64: previous_hash64).first
   end
 
   def to_h
@@ -52,40 +47,38 @@ class Block
     }
   end
 
-  private
-
-  def calculate_hash
-    self.hash64 = if genesis
-                    '0' * 64
-                  else
-                    Digest::SHA256.hexdigest("#{previous_hash64}#{timestamp}#{data}#{proof_of_work}")
-                  end
-  end
-
-  def genesis_validations
+  def genesis_previous_hash_validations
     return unless genesis
 
-    raise ApplicationError, 'Genesis block must not have a previous hash64' unless previous_hash64.nil?
+    raise ModelValidationError, 'Genesis block must not have a previous hash64' if previous_hash64
 
     true
   end
 
-  def non_genesis_validations
+  def non_genesis_previous_hash_validations
     return if genesis
 
-    raise ApplicationError, 'Missing previous hash64' if previous_hash64.nil?
-    raise ApplicationError, 'Invalid previous hash64' if previous_block.nil?
+    raise ModelValidationError, 'Missing previous hash64' if previous_hash64.nil?
+    raise ModelValidationError, 'Previous block not found' if previous_block.nil?
 
     true
   end
 
-  def set_timestamp
-    self.timestamp = Time.now.to_i
+  def run_validations!
+    validate_hash64
+    validate_previous_hash
+  end
+
+  def validate_hash64
+    raise ModelValidationError, 'Missing hash64' if hash64.nil?
+    raise ModelValidationError, 'Invalid hash64' unless hash64.match?(Application.instance.hash64_pattern)
+
+    true
   end
 
   def validate_previous_hash
-    genesis_validations
-    non_genesis_validations
+    genesis_previous_hash_validations
+    non_genesis_previous_hash_validations
 
     true
   end
