@@ -16,10 +16,15 @@ services:
     restart: unless-stopped
 
   blockchain:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    build: .
+    container_name: blockchain
+    command: bundle exec rackup --host 0.0.0.0 -p 4000
     ports:
-      - "3001:3001"
+      - "3001:4000"
     depends_on:
       - mongodb
+    environment:
+      - ENVIRONMENT=production
+      - NODE=4000
+    volumes:
+      - .:/blockchain
