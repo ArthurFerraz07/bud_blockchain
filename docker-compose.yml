@@ -28,4 +28,4 @@ services:
       - NODE=4000
       - BIND=0.0.0.0
     volumes:
-      - .:/blockchain
+      - ./application:/application
