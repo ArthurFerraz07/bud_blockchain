@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './app'
+require './app/errors/application_error'
 
 # This class handle the application instance
 class Application
@@ -9,7 +9,7 @@ class Application
 
   ENVIRONMENTS = %i[development test production].freeze
 
-  attr_accessor :node, :environment
+  attr_accessor :node, :environment, :started
 
   class << self
     def instance
@@ -46,41 +46,34 @@ class Application
     /^[a-f0-9]{64}$/
   end
 
-  def run(environment, node = 3000)
+  def start(environment, node)
+    raise ApplicationError, 'Application already started' if started
+
     self.environment = environment&.to_sym
-    self.node = node
+    self.node = node&.to_i
+    self.started = Time.now
 
     validate_environment
+  end
 
-    load_database
-
-    set_store_node
-
-    load_constants
-
-    handle_blockchain_instance
+  def to_hash
+    {
+      node:,
+      environment:,
+      started:,
+      blockchain_genesis_hash64:,
+      blockchain_proof_of_work_floor:,
+      blockchain_proof_of_work_ceil:,
+      blockchain_proof_of_work_range:,
+      blockchain_difficult:,
+      blockchain_proof_of_work_hash_starts_with:,
+      hash64_pattern:,
+    }
   end
 
   private
 
-  def load_constants
-    DefineConstantByHashConst.new(Api::V1::ApplicationController, 'RESPONSE_STATUSES').call
-  end
-
-  def load_database
-    Mongoid.load!(File.join(File.dirname(__FILE__), 'config', 'mongoid.yml'), environment.to_sym)
-  end
-
   def validate_environment
     raise "invalid environment #{environment}" unless ENVIRONMENTS.include?(environment)
-  end
-
-  def set_store_node
-    Block.store_in_node(node)
-  end
-
-  def handle_blockchain_instance
-    Blockchain.instance
-    Blockchain::HandleGenesisBlockService.new.call!
   end
 end

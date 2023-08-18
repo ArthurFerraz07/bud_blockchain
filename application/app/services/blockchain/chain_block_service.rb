@@ -10,12 +10,6 @@ class Blockchain
       self.block = block
     end
 
-    def call
-      success_response(block: call!)
-    rescue StandardError => e
-      error_response(e)
-    end
-
     def call!
       raise 'missing mining started at' unless block.mining_started_at
 

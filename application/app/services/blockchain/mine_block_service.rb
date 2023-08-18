@@ -12,12 +12,6 @@ class Blockchain
       self.data = data
     end
 
-    def call
-      success_response(block: call!)
-    rescue StandardError => e
-      error_response(e)
-    end
-
     def call!
       load_blockchain
       build_block

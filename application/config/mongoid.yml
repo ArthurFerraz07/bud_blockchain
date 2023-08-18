@@ -21,6 +21,6 @@ production:
     default:
       database: bud_blockchain_production
       hosts:
-        - localhost:27017
+        - mongodb:27017
       options:
         server_selection_timeout: 1

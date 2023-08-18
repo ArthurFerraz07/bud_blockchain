@@ -14,6 +14,7 @@ FactoryBot.define do
 
     trait :genesis do
       genesis { true }
+      hash64 { '0' * 64 }
       previous_hash64 { nil }
     end
   end

@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require './app/repositories/blocks_repository'
 require './app/errors/model_validation_error'
 require './app/models/application_model'
 
 # This class represents a block of a blockchain
 class Block < ApplicationModel
   include Mongoid::Document
+
+  store_in collection: nil
 
   field :hash64, type: String
   field :previous_hash64, type: String
@@ -29,14 +32,13 @@ class Block < ApplicationModel
   def initialize(attributes = {})
     super
     self.timestamp ||= Time.now.to_i
-    # self.data ||= {}
   end
 
   def previous_block
-    @previous_block ||= Block.where(hash64: previous_hash64).first
+    @previous_block ||= BlocksRepository.new(Block).get_by_hash64(previous_block)
   end
 
-  def to_h
+  def to_hash
     {
       hash64:,
       previous_hash64:,
@@ -46,6 +48,8 @@ class Block < ApplicationModel
       mining_time:
     }
   end
+
+  private
 
   def genesis_previous_hash_validations
     return unless genesis

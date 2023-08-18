@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require './application'
 require './app/errors/service_error'
 
 class Block

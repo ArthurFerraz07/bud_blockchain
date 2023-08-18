@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require './app'
 require './application'
+require './application_runner'
 
 Dir['spec/factories/*.rb'].each { |file| require "./#{file}" }
 
@@ -11,7 +11,10 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 end
 
-Application.instance.run(:test)
+ApplicationRunner.new(:test, 1).run
+
+require 'simplecov'
+SimpleCov.start
 
 def randon_proof_of_work
   rand(Application.instance.blockchain_proof_of_work_range)

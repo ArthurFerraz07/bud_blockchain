@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require './app'
+require './application_runner'
 
 node = (ARGV[0] || 3000).freeze
 environment = (ARGV[1] || 'development').freeze
 
-Application.instance.run(environment, node)
+ApplicationRunner.new(environment, node).run
 
 binding.pry

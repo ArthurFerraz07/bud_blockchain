@@ -7,7 +7,7 @@ module Api
     # This class is the entry point for the blockchain API
     class BlockchainController < ApplicationController
       def index
-        render(data: { blocks: Block.all.map(&:to_h) })
+        render(data: { blocks: Block.all.map(&:to_hash) })
       end
 
       def validate_chain
@@ -21,7 +21,7 @@ module Api
 
         service_response = Blockchain::MineBlockService.new(params['data']).call
 
-        render(data: { block: service_response.block.to_h })
+        render(data: { block: service_response.block.to_hash })
       end
     end
   end

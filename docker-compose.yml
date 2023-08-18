@@ -10,7 +10,16 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /home/arthur/Programming/bud_blockchain_development:/data/db
+      - ./tmp/mongodb:/data/db
     ports:
       - 27017:27017
     restart: unless-stopped
+
+  blockchain:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb

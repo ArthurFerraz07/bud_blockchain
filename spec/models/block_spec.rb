@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require './spec/spec_helper'
-require './spec/helpers/block_helper'
+require './spec/spec_helpers/spec_block_helper'
 
 RSpec.describe Block do
-  include BlockHelper
+  include SpecBlockHelper
 
   let!(:genesis) do
     block_ = Block.where(genesis: true).first
@@ -82,12 +82,12 @@ RSpec.describe Block do
     end
   end
 
-  describe '#to_h' do
+  describe '#to_hash' do
     context 'with valid attributes' do
       let(:block) { create(:block) }
 
       it 'expects to return a hash with the block attributes' do
-        expect(block.to_h).to eq(
+        expect(block.to_hash).to eq(
           hash64: block.hash64,
           previous_hash64: block.previous_hash64,
           timestamp: block.timestamp,
@@ -224,7 +224,7 @@ RSpec.describe Block do
 
       it 'expects to build the correct object' do
         expect(block).to be_a(Block)
-        expect(block.to_h).to eq(block_to_h)
+        expect(block.to_hash).to eq(block_to_h)
       end
     end
 
@@ -260,7 +260,7 @@ RSpec.describe Block do
 
       it 'expects to build the correct object' do
         expect(block).to be_a(Block)
-        expect(block.to_h).to eq(block_to_h)
+        expect(block.to_hash).to eq(block_to_h)
       end
     end
   end

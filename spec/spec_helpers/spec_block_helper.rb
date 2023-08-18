@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module BlockHelper
+module SpecBlockHelper
   def last_block
     Block.last_block
   end
