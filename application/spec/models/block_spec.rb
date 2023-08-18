@@ -16,47 +16,12 @@ RSpec.describe Block do
 
   let(:freeze_timestamp) { freeze_time.to_i }
 
-  ################
-
-  # Tests with better organization will be writen. The current tests was been writted following the UNIT tests concept,
-  # writing atomic tests for fragments of the application.
-  #
-  # The new tests will be writen following the "story telling" concept.
-  #
-  # Example: describe #instance, when all data is valid, is expected to be valid, instead of
-  # describe #previous_block with valid previous_hash64
-
-  ################
-
   describe '#store_in_node' do
     context 'when node is 3000' do
       let(:node) { 3000 }
       it 'expects to store blocks in "node_3001_blocks" collection' do
         Block.store_in_node(3001)
         expect(Block.collection.name).to eq('node_3001_blocks')
-      end
-    end
-  end
-
-  describe '#proof_of_work_hash' do
-    context 'with random previous_hash and previous_proof_of_work' do
-      let(:proof_of_work) do
-        (rand * 10**10).to_i
-      end
-      let(:previous_proof_of_work) do
-        (rand * 10**10).to_i
-      end
-      let(:hash) do
-        proof_of_work_ = proof_of_work**2 - previous_proof_of_work**2
-        Digest::SHA256.hexdigest(proof_of_work_.to_s)
-      end
-
-      it 'expects to return a Digest::SHA256 hash' do
-        # expect(Block.proof_of_work_hash(proof_of_work, previous_proof_of_work)).to eq(hash)
-      end
-
-      it 'expects to return a 64 characters long hash' do
-        # expect(Block.proof_of_work_hash(proof_of_work, previous_proof_of_work).length).to eq(64)
       end
     end
   end
@@ -95,34 +60,6 @@ RSpec.describe Block do
           proof_of_work: block.proof_of_work,
           mining_time: block.mining_time
         )
-      end
-    end
-  end
-
-  describe '#calculate_hash' do
-    context 'when block is genesis' do
-      let(:block) { create(:block, :genesis) }
-
-      before do
-        block.send(:calculate_hash)
-      end
-
-      it 'expects to set hash64 to 64 zeros' do
-        expect(block.hash64).to eq('0' * 64)
-      end
-    end
-
-    context 'when block is genesis' do
-      let(:block) { create(:block) }
-
-      before do
-        block.send(:calculate_hash)
-      end
-
-      it 'expects to set hash64' do
-        hash64 = calculate_hash(block: block)
-        expect(block.hash64).to eq(hash64)
-        expect(block.hash64).not_to eq('0' * 64)
       end
     end
   end

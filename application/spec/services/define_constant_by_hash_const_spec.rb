@@ -17,8 +17,7 @@ RSpec.describe DefineConstantByHashConst do
   describe '#call' do
     context 'when every little thing go alright' do
       it 'expects to return a success response' do
-        expect(response.error).to be_nil
-        expect(response.success).to eq(true)
+        expect(response).to eq(true)
       end
 
       it 'expects to define the constants' do

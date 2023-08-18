@@ -11,6 +11,7 @@ FactoryBot.define do
     previous_hash64 { '0' * 64 }
     data { {} }
     genesis { false }
+    hash64 { DigestService.sha256_hexdigest(Faker::Internet.uuid) }
 
     trait :genesis do
       genesis { true }
