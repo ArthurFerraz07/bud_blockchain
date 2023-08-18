@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require 'dotenv'
 require './application_runner'
 
-node = (ARGV[0] || 3000).freeze
-environment = (ARGV[1] || 'development').freeze
+Dotenv.load
+
+node = (ENV['NODE'] || 3000).freeze
+environment = (ENV['ENVIRONMENT'] || 'development').freeze
 
 ApplicationRunner.new(environment, node).run
 

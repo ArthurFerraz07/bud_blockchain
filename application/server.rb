@@ -15,6 +15,8 @@ print "⚡ Web Server Running ⚡\n\n"
 print "--- Mode  #{environment} ---\n\n"
 print "--- Node #{node} ---\n\n"
 
+set :port, node
+
 get '/' do
   Api::V1::ApplicationController.new(request).index
 end
