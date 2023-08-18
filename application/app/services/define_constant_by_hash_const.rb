@@ -8,7 +8,7 @@ class DefineConstantByHashConst < ApplicationService
     @const_name = const_name
   end
 
-  def call
+  def call!
     get_const_hash
     @hash.each do |key, value|
       next if @klass.const_defined?(key)
@@ -16,8 +16,6 @@ class DefineConstantByHashConst < ApplicationService
       @klass.const_set(key, value)
     end
     success_response
-  rescue StandardError => e
-    error_response(e)
   end
 
   private

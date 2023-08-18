@@ -13,7 +13,7 @@ RUN gem install bundler
 RUN bundle install --jobs 4
 
 # Exponha a porta em que o aplicativo estará em execução
-EXPOSE 3000
+EXPOSE 3001
 
 # Defina o comando de inicialização padrão para o aplicativo
 CMD ["bundle", "exec", "ruby", "server.rb", "3001", "production"]

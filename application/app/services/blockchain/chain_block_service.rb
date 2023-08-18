@@ -13,12 +13,12 @@ class Blockchain
     def call!
       raise 'missing mining started at' unless block.mining_started_at
 
-      load_blockchain
-
       block.hash64 = Block::GenerateBlockHashService.new(block).call!
       block.mining_time = Time.now.to_i - block.mining_started_at
       block.save!
-      blockchain.update_last_block(block)
+      Blockchain.instance.update_last_block(block)
+
+      success_response({ block: })
     end
   end
 end

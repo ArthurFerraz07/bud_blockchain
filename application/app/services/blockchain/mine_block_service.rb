@@ -13,20 +13,19 @@ class Blockchain
     end
 
     def call!
-      load_blockchain
       build_block
       chain_block
 
-      block
+      success_response({ block: })
     end
 
     private
 
     def build_block
-      raise ServiceError, '[CRITICAL] Missing last block' unless blockchain.last_block
+      raise ServiceError, '[CRITICAL] Missing last block' unless Blockchain.instance.last_block
 
       self.block = Block.new(data:)
-      block.previous_hash64 = blockchain.last_block.hash64
+      block.previous_hash64 = Blockchain.instance.last_block.hash64
       block.mining_started_at = Time.now.to_i
 
       loop do
@@ -34,9 +33,11 @@ class Blockchain
 
         p "mining try with proof of work: #{block.proof_of_work}"
 
-        next unless ValidateBlockOnChainService.new(block).call.success
+        ValidateBlockOnChainService.new(block).call!
 
         break
+      rescue StandardError => _e
+        next
       end
 
       p "mining success with proof of work: #{block.proof_of_work}"

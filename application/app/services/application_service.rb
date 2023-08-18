@@ -8,12 +8,6 @@ class ApplicationService
     self.success = false
   end
 
-  protected
-
-  def load_blockchain
-    self.blockchain = Blockchain.instance
-  end
-
   private
 
   def default_response(success, data = {})

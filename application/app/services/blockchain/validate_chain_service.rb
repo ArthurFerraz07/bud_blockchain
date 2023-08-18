@@ -5,14 +5,10 @@ class Blockchain
   class ValidateChainService < ApplicationService
     attr_accessor :blockchain
 
-    def call
-      load_blockchain
-
-      blockchain.validate_chain
+    def call!
+      Blockchain.instance.validate_chain
 
       success_response
-    rescue StandardError => e
-      error_response(e)
     end
   end
 end

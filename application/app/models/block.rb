@@ -35,7 +35,7 @@ class Block < ApplicationModel
   end
 
   def previous_block
-    @previous_block ||= BlocksRepository.new(Block).get_by_hash64(previous_block)
+    @previous_block ||= BlocksRepository.new(Block).get_by_hash64(previous_hash64)
   end
 
   def to_hash

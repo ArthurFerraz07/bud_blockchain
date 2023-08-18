@@ -12,7 +12,7 @@ RSpec.describe DefineConstantByHashConst do
 
   let(:subject) { described_class.new(klass, const_name) }
 
-  let(:response) { subject.call }
+  let(:response) { subject.call! }
 
   describe '#call' do
     context 'when every little thing go alright' do
@@ -22,7 +22,7 @@ RSpec.describe DefineConstantByHashConst do
       end
 
       it 'expects to define the constants' do
-        subject.call
+        subject.call!
         expect(Klass::A).to eq(1)
         expect(Klass::B).to eq(2)
       end

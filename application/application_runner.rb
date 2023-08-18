@@ -30,7 +30,7 @@ class ApplicationRunner
   private
 
   def define_constants
-    DefineConstantByHashConst.new(Api::V1::ApplicationController, 'RESPONSE_STATUSES').call
+    DefineConstantByHashConst.new(Api::V1::ApplicationController, 'RESPONSE_STATUSES').call!
   end
 
   def load_database
