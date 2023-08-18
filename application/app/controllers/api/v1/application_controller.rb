@@ -6,7 +6,8 @@ module Api
     class ApplicationController
       RESPONSE_STATUSES = {
         'STATUS_SUCCESS' => 0,
-        'STATUS_GENERIC_ERROR' => 1
+        'STATUS_GENERIC_ERROR' => 1,
+        'STATUS_SERVICE_ERROR' => 2
       }.freeze
 
       attr_accessor :params, :request
@@ -33,6 +34,13 @@ module Api
           metadata:,
           data:
         }.to_json
+      end
+
+      def unexpected_error(error)
+        p '[Critical] An unexpected error has occurred!!!'
+        p error.message
+
+        render(data: { error: 'Unexpectec error' }, status: 'STATUS_GENERIC_ERROR')
       end
     end
   end

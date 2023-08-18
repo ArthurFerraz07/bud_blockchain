@@ -11,21 +11,25 @@ module Api
       end
 
       def validate_chain
-        service_response = Blockchain::ValidateChainService.new.call!
+        Blockchain::ValidateChainService.new.call!
 
-        render(data: { valid: service_response.success, error: service_response.error })
+        render(data: { valid: true })
+      rescue ServiceError => e
+        render(data: { error: e.message }, status: 'STATUS_SERVICE_ERROR')
       rescue StandardError => e
-        render(data: { error: e.message }, status: 'STATUS_GENERIC_ERROR')
+        unexpected_error(e)
       end
 
       def mine_block
         parse_request_body
 
-        service_response = Blockchain::MineBlockService.new(params['data']).call!
+        mined_block = Blockchain::MineBlockService.new(params['data']).call!
 
-        render(data: { block: service_response.block.to_hash })
+        render(data: { block: mined_block.to_hash })
+      rescue ServiceError => e
+        render(data: { error: e.message }, status: 'STATUS_SERVICE_ERROR')
       rescue StandardError => e
-        render(data: { error: e.message }, status: 'STATUS_GENERIC_ERROR')
+        unexpected_error(e)
       end
     end
   end

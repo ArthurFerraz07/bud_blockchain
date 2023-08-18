@@ -6,7 +6,6 @@ require './app/errors/application_error'
 require_relative './memo_model'
 require_relative './block'
 
-
 # This class manage the blockchain logic
 class Blockchain < MemoModel
   PROOF_OF_WORK_RANGE = Application.instance.blockchain_proof_of_work_range
@@ -24,41 +23,11 @@ class Blockchain < MemoModel
     end
   end
 
-  def initialize
-    super
-    # handle_genesis_block
-  end
-
   def last_block
     @last_block ||= Block.desc(:timestamp).first
-  end
-
-  def validate_chain
-    genesis_blocks_count = Block.where(genesis: true).count
-    unless genesis_blocks_count == 1
-      raise ApplicationError, "[CRITICAL] Should have only one genesis block, but have #{genesis_blocks_count}"
-    end
-
-    it_count = 0
-    block = last_block
-    loop do
-      break if block.genesis
-
-      previous_block = Block.where(hash64: block.previous_hash64).first
-
-      ValidateBlockOnChainService.new(block).call!
-
-      block = previous_block
-      it_count += 1
-    end
-    raise ApplicationError, 'Invalid chain' unless it_count == Block.count - 1
-
-    true
   end
 
   def update_last_block(block)
     @last_block = block
   end
-
-  private
 end
