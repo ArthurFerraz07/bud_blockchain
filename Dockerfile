@@ -11,5 +11,4 @@ RUN bundle install --jobs 4
 
 EXPOSE 4000
 
-# Defina o comando de inicialização padrão para o aplicativo
-CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "4000"]
+CMD ["sh", "server.sh"]

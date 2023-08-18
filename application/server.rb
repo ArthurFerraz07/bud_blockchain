@@ -1,21 +1,6 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require 'dotenv'
-require './application_runner'
-
-Dotenv.load
-
-node = (ENV['NODE'] || 3000).freeze
-environment = (ENV['ENVIRONMENT'] || 'development').freeze
-
-ApplicationRunner.new(environment, node).run
-
-print "⚡ Web Server Running ⚡\n\n"
-print "--- Mode  #{environment} ---\n\n"
-print "--- Node #{node} ---\n\n"
-
-set :port, node
 
 get '/' do
   Api::V1::ApplicationController.new(request).index
